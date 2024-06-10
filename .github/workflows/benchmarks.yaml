@@ -18,14 +18,21 @@ jobs:
           architecture: x64
 
       - name: Run benchmarks
-        run: ./gradlew jsBenchmark
+        run: ./gradlew jsFreeFunctionBenchmark jsObjFunctionBenchmark
 
       - name: Copy results
         run: |
-          REPORTS_DIR=build/reports/benchmarks/main
+          REPORTS_DIR=build/reports/benchmarks/freeFunction
           DIR_NAME=$(ls $REPORTS_DIR | head -n1)
           mkdir -p results
-          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/$DIR_NAME-kn-$arch_name; done
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/free-fun-$DIR_NAME-kn-$arch_name; done
+
+      - name: Copy more results
+        run: |
+          REPORTS_DIR=build/reports/benchmarks/objFunction
+          DIR_NAME=$(ls $REPORTS_DIR | head -n1)
+          mkdir -p results
+          ls $REPORTS_DIR/$DIR_NAME/*.json | while read report_json; do arch_name=$(basename $report_json); cp $report_json results/obj-fun-$DIR_NAME-kn-$arch_name; done
 
       - name: Publish results
         uses: peter-evans/create-pull-request@v5

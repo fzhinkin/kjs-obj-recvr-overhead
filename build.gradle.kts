@@ -1,3 +1,6 @@
+import kotlinx.benchmark.gradle.JsBenchmarkTarget
+import kotlinx.benchmark.gradle.JsBenchmarksExecutor
+
 plugins {
     kotlin("multiplatform") version "2.0.0"
     id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
@@ -26,6 +29,19 @@ kotlin {
 
 benchmark {
     targets {
-        register("js")
+        register("js") {
+            this as JsBenchmarkTarget
+            jsBenchmarksExecutor = JsBenchmarksExecutor.BuiltIn
+        }
+    }
+
+    configurations {
+        create("freeFunction") {
+            include("FunctionCallBenchmark.freeFunctionCall")
+        }
+
+        create("objFunction") {
+            include("FunctionCallBenchmark.objectFunctionCall")
+        }
     }
 }
